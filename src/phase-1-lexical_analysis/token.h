@@ -10,6 +10,7 @@ using namespace std;
 class Token {
 public:
     Token();
+     string SearchTokenClass(const string& lexeme)const;
 
 private:
     string tokenClass;
