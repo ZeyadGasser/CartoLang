@@ -4,6 +4,16 @@ Token::Token(){
     loadToken();
 }
 
+ string Token::SearchTokenClass(const string& lexeme)const{
+if(tokens.find(lexeme)!=tokens.end()){
+return tokens.at(lexeme);
+}
+else{ 
+return "IDENTIFIER";
+}
+}
+
+
 void Token::loadToken() {
     // Program & Function
     tokens["to_infinity"] = "KEYWORD";
@@ -59,6 +69,12 @@ void Token::loadToken() {
     tokens[">="] = "SYMBOL";
     tokens["=="] = "SYMBOL";
     tokens["!="] = "SYMBOL";
+
+    // Add compound operators
+    tokens["++"] = "SYMBOL";
+    tokens["--"] = "SYMBOL";
+    tokens["+="] = "SYMBOL";
+    tokens["-="] = "SYMBOL";
 
     cout << "Tokens loaded successfully!" << endl;
 
