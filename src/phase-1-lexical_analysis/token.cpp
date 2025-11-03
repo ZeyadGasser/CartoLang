@@ -69,6 +69,8 @@ void Token::loadToken() {
     tokens[">="] = "SYMBOL";
     tokens["=="] = "SYMBOL";
     tokens["!="] = "SYMBOL";
+    tokens["#"] = "SYMBOL";
+
 
     // Add compound operators
     tokens["++"] = "SYMBOL";
