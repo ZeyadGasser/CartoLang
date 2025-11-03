@@ -1,0 +1,46 @@
+Program → StatementList EOF
+
+StatementList → Statement StatementList | ε
+
+Statement → Comment
+           | Declaration
+           | IfStmt
+           | WhileStmt
+           | ForStmt
+           | FunctionStmt
+           | ReturnStmt
+           | OutputStmt
+           | InputStmt
+           | Assignment
+           | ";"
+
+Declaration → KEYWORD IDENTIFIER [ "=" Expr ] ";"
+
+Assignment → IDENTIFIER ( "=" | "+=" | "-=" | "++" | "--" ) [ Expr ] ";"
+
+IfStmt → "sponge_bob_check" "(" Condition ")" "{" StatementList "}"
+          [ "sponge_bob_try_again" "{" StatementList "}" ]
+
+WhileStmt → "penguins_madagascar_repeat" "(" Condition ")" "{" StatementList "}"
+
+ForStmt → "penguins_madagascar_iteration" "(" Declaration ";" Condition ";" Assignment ")" "{" StatementList "}"
+
+FunctionStmt → "po_kungfu" ( "to_infinity" | IDENTIFIER ) "(" ")" "{" StatementList "}"
+
+ReturnStmt → "po_kungfu_mastered" Expr ";"
+
+OutputStmt → "buzz_speak" "(" Expr ")" ";"
+
+InputStmt → "buzz_receive" "(" IDENTIFIER ")" ";"
+
+Comment → COMMENT
+
+Condition → Expr RelOp Expr
+
+RelOp → "==" | "!=" | "<" | ">" | "<=" | ">="
+
+Expr → Term { ("+" | "-") Term }
+
+Term → Factor { ("*" | "/" | "%") Factor }
+
+Factor → NUMBER | IDENTIFIER | STRING_LITERAL | "(" Expr ")"
