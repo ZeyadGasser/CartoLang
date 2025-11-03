@@ -66,6 +66,7 @@ void Lexer::Tokenize(const string& line, int lineNumber) {
         else {
             lexeme = word.substr(0, 1);
             tokenClass = "UNKNOWN";
+            tokensList.push_back({lexeme, tokenClass, lineNumber});
             word = word.substr(1);
             continue;
         }
