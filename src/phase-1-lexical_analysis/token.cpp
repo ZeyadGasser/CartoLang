@@ -4,7 +4,7 @@ Token::Token(){
     loadToken();
 }
 
- string Token::SearchTokenClass(const string& lexeme)const{
+string Token::SearchTokenClass(const string& lexeme)const{
 if(tokens.find(lexeme)!=tokens.end()){
 return tokens.at(lexeme);
 }
@@ -44,7 +44,7 @@ void Token::loadToken() {
     tokens["buzz_zone"] = "KEYWORD";
 
     // Comment
-    tokens["~"] = "SYMBOL";
+    tokens["~"] = "COMMENT";
 
     // General Symbols
     tokens["{"] = "SYMBOL";
