@@ -43,4 +43,4 @@ Expr → Term { ("+" | "-") Term }
 
 Term → Factor { ("*" | "/" | "%") Factor }
 
-Factor → NUMBER | IDENTIFIER | STRING_LITERAL | "(" Expr ")"
+Factor → NUMBER | IDENTIFIER  | "(" Expr ")"
