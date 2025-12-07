@@ -4,7 +4,7 @@
              buzz_speak("Hello World!");
      }
      bat_num int=10;
-     super_num double= 5555!
+     super_num double= 5555;
 
       sponge_bob_check (int  double) {
          buzz_speak("INT greater!");

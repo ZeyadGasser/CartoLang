@@ -11,11 +11,18 @@ tuple<string, string, int> Parser::getCurrentToken() {
     return make_tuple("EOF", "EOF", -1);
 }
 /************************************************************************************************* */
-void Parser::match(string expectedClass) {
+void Parser::match(string expectedClass , string  expectedLexeme = "") {
     string lexeme, tokenClass;
     int lineNumber;
     tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
-    
+    if(expectedClass == "SYMBOL" && expectedClass == tokenClass){
+        if( lexeme ==expectedLexeme){
+            cout << "Matched: " << lexeme << " (" << tokenClass << ")" << endl;
+            currentIndex++;
+        }else{
+            error("Expected " + expectedClass + " but found " + tokenClass + " '" + lexeme + "'", lineNumber);
+        }
+    }
     if (tokenClass == expectedClass) {
         cout << "Matched: " << lexeme << " (" << tokenClass << ")" << endl;
         currentIndex++;
@@ -95,7 +102,7 @@ void Parser::parseStatement() {
         parseAssignment();
     }
     else if (lexeme == ";") {
-        match("SYMBOL");
+        match("SYMBOL" , ";");
     }
     else {
         error("Unexpected token '" + lexeme + "'", lineNumber);
@@ -112,11 +119,11 @@ void Parser::parseDeclaration() {
     
     tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
     if (lexeme == "=") {
-        match("SYMBOL");
+        match("SYMBOL", "=");
         parseExpr();
     }
     
-    match("SYMBOL");
+    match("SYMBOL" , ";");
 }
 
 // Assignment
@@ -129,14 +136,14 @@ void Parser::parseAssignment() {
     
     if (lexeme == "=" || lexeme == "+=" || lexeme == "-=" || 
         lexeme == "++" || lexeme == "--") {
-        match("SYMBOL");
+        match("SYMBOL" , lexeme);
         
         if (lexeme != "++" && lexeme != "--") {
             parseExpr();
         }
     }
     
-    match("SYMBOL");
+    match("SYMBOL" , ";");
 }
 
 // IfStmt
@@ -145,31 +152,31 @@ void Parser::parseIfStmt() {
     int lineNumber;
     
     match("KEYWORD");
-    match("SYMBOL");
+    match("SYMBOL" , "(");
     parseCondition();
-    match("SYMBOL");
-    match("SYMBOL");
+    match("SYMBOL" , ")");
+    match("SYMBOL" , "{");
     parseStatementList();
-    match("SYMBOL");
+    match("SYMBOL" , "}");
     
     tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
     if (lexeme == "sponge_bob_try_again") {
         match("KEYWORD");
-        match("SYMBOL");
+        match("SYMBOL" , "{");
         parseStatementList();
-        match("SYMBOL");
+        match("SYMBOL" , "}");
     }
 }
 
 // WhileStmt
 void Parser::parseWhileStmt() {
     match("KEYWORD");
-    match("SYMBOL");
+    match("SYMBOL" , "(");
     parseCondition();
-    match("SYMBOL");
-    match("SYMBOL");
+    match("SYMBOL" , ")");
+    match("SYMBOL" , "{");
     parseStatementList();
-    match("SYMBOL");
+    match("SYMBOL" , "}");
 }
 
 // ForStmt
@@ -178,26 +185,26 @@ void Parser::parseForStmt() {
     int lineNumber;
     
     match("KEYWORD");
-    match("SYMBOL");
+    match("SYMBOL" , "(");
     parseDeclaration();
-    match("SYMBOL");
+    match("SYMBOL" , ";");
     parseCondition();
-    match("SYMBOL");
+    match("SYMBOL" , ";");
     
     match("IDENTIFIER");
     tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
     if (lexeme == "=" || lexeme == "+=" || lexeme == "-=" || 
         lexeme == "++" || lexeme == "--") {
-        match("SYMBOL");
+        match("SYMBOL" , lexeme);
         if (lexeme != "++" && lexeme != "--") {
             parseExpr();
         }
     }
     
-    match("SYMBOL");
-    match("SYMBOL");
+    match("SYMBOL" , ")");
+    match("SYMBOL" , "{");
     parseStatementList();
-    match("SYMBOL");
+    match("SYMBOL" , "}");
 }
 
 // FunctionStmt
@@ -214,18 +221,18 @@ void Parser::parseFunctionStmt() {
         match("IDENTIFIER");
     }
     
-    match("SYMBOL");
-    match("SYMBOL");
-    match("SYMBOL");
+    match("SYMBOL" , "(");
+    match("SYMBOL" , ")");
+    match("SYMBOL" , "{");
     parseStatementList();
-    match("SYMBOL");
+    match("SYMBOL" , "}");
 }
 
 // ReturnStmt
 void Parser::parseReturnStmt() {
     match("KEYWORD");
     parseExpr();
-    match("SYMBOL");
+    match("SYMBOL" , ";");
 }
 
 // Condition
@@ -244,7 +251,7 @@ void Parser::parseExpr() {
     tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
     
     while (lexeme == "+" || lexeme == "-") {
-        match("SYMBOL");
+        match("SYMBOL" , lexeme);
         parseTerm();
         tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
     }
@@ -259,7 +266,7 @@ void Parser::parseTerm() {
     tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
     
     while (lexeme == "*" || lexeme == "/" || lexeme == "%") {
-        match("SYMBOL");
+        match("SYMBOL" ,lexeme);
         parseFactor();
         tie(lexeme, tokenClass, lineNumber) = getCurrentToken();
     }
@@ -281,9 +288,9 @@ void Parser::parseFactor() {
         match("STRING_LITERAL");
     }
     else if (lexeme == "(") {
-        match("SYMBOL");
+        match("SYMBOL" , "(");
         parseExpr();
-        match("SYMBOL");
+        match("SYMBOL" , ")");
     }
     else {
         error("Expected number, identifier, string, or '(' in expression", lineNumber);
@@ -293,19 +300,19 @@ void Parser::parseFactor() {
 // OutputStmt
 void Parser::parseOutputStmt() {
     match("KEYWORD");
-    match("SYMBOL");
+    match("SYMBOL" , "(");
     parseExpr();
-    match("SYMBOL");
-    match("SYMBOL");
+    match("SYMBOL" , ")");
+    match("SYMBOL" , ";");
 }
 
 // InputStmt
 void Parser::parseInputStmt() {
     match("KEYWORD");
-    match("SYMBOL");
+    match("SYMBOL" , "(");
     match("IDENTIFIER");
-    match("SYMBOL");
-    match("SYMBOL");
+    match("SYMBOL" , ")");
+    match("SYMBOL" , ";");
 }
 
 // Comment
@@ -321,7 +328,7 @@ void Parser::parseRelOp() {
     
     if (lexeme == "==" || lexeme == "!=" || lexeme == "<" || 
         lexeme == ">" || lexeme == "<=" || lexeme == ">=") {
-        match("SYMBOL");
+        match("SYMBOL" , lexeme);
     } else {
         error("Expected relational operator (==, !=, <, >, <=, >=)", lineNumber);
     }
