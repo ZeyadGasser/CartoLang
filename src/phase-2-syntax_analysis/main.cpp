@@ -7,17 +7,19 @@ using namespace std;
 int main() {
     cout << "=== CartoLang Compiler ===" << endl << endl;
 
-        Lexer lexer;
-        const vector<tuple<string, string, int>>& tokens = lexer.GetTokenList();
-        
-        cout << "\nTokens generated: " << tokens.size() << endl;
-        
-        cout << "\n--- Starting Parser ---\n" << endl;
-        Parser parser(tokens);
-        parser.parseProgram();
-        cout << "\n=== Compilation Successful ===" << endl;
-
-   
+    Lexer lexer;
+    const vector<tuple<string, string, int>>& tokens = lexer.GetTokenList();
+    
+    cout << "\nTokens generated: " << tokens.size() << endl;
+    
+    cout << "\n--- Starting Parser ---\n" << endl;
+    Parser parser(tokens);
+    parser.parseProgram();
+    
+    parser.printParseTree();
+    parser.printSymbolTable();
+    
+    cout << "\n=== Compilation Successful ===" << endl;
 
     return 0;
 }
